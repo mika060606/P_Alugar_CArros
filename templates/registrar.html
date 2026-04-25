@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VaiCarros</title>
+    <title>Registrar - VaiCarros</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
     <style>
         body {
@@ -26,9 +26,9 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            image-rendering: -webkit-optimize-contrast; /* Melhora a nitidez em navegadores como Chrome e Edge */
-            filter: contrast(1.1) brightness(0.9); /* Realça os detalhes e as cores */
-            opacity: 0.5; /* Ajusta a transparência aqui (0.0 a 1.0) */
+            image-rendering: -webkit-optimize-contrast;
+            filter: contrast(1.1) brightness(0.9);
+            opacity: 0.5;
             z-index: -1;
         }
         .login-container {
@@ -36,7 +36,7 @@
             padding: 30px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             width: 480px;
-            min-height: 520px;
+            min-height: 620px;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -45,18 +45,24 @@
         h2 {
             text-align: center;
             color: #333;
-            font-size: 3.5em; 
-            margin-top: 10px; 
+            font-size: 3.5em;
+            margin-top: 10px;
             margin-bottom: 40px;
             font-family: 'Disco Diva', 'Righteous', cursive;
         }
-        input[type="text"], input[type="password"] {
+        input[type="text"], input[type="email"], input[type="password"], input[type="tel"] {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 15px 0;
         }
         button {
             width: 100%;
@@ -89,15 +95,18 @@
         <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="width: 150px; display: block; margin: 0 auto 20px;">
         <h2>VaiCarros</h2>
         <form action="#" method="post">
-            <input type="text" name="username" placeholder="Nome de utilizador" required>
-            <input type="password" name="password" placeholder="Palavra-passe" required>
-            <button type="submit">Conectar</button>
-            <button type="button" onclick="window.location.href='/Registrar'">
-            Registrar
-            </button>
-            <button onclick="window.location.href='/index'" class="btn-text">
-            Entrar sem conta
-            </button>
+            <input type="text" name="nome" placeholder="Nome" required>
+            <input type="text" name="sobrenome" placeholder="Sobrenome" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="tel" name="numero" placeholder="Número" required>
+            <input type="password" name="senha" placeholder="Senha" required>
+            <input type="password" name="confirmar_senha" placeholder="Confirmar senha" required>
+            <label class="checkbox-group">
+                <input type="checkbox" name="termos" required>
+                Confirmar com os termos
+            </label>
+            <button type="submit">Registrar</button>
+            <button type="button" onclick="window.location.href='/login'">Voltar</button>
         </form>
     </div>
 </body>

@@ -12,3 +12,7 @@ def login():
 @app.route('/index')
 def home():
     return render_template('index.html')
+
+@app.route('/Registrar')
+def cadastro():
+    return render_template('registrar.html')
