@@ -16,3 +16,4 @@ def home():
 @app.route('/Registrar')
 def cadastro():
     return render_template('registrar.html')
+

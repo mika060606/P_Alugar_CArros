@@ -17,6 +17,9 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     "connect_args": {"sslmode": "require"}
 }
 
+with app.app_context():
+    db.create_all()
+
 from routs import *
 
 if __name__ == '__main__':
