@@ -1,5 +1,6 @@
 from flask import Flask, config, render_template
 from flask_sqlalchemy import SQLAlchemy
+from models import *
 import os
 
 
