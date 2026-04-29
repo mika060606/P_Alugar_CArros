@@ -1,4 +1,4 @@
-from flask import Flask, config, render_template
+from flask import Flask
 from db import db
 
 import os
@@ -16,7 +16,7 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     "connect_args": {"sslmode": "require"}
 }
 
-
+db.init_app(app)
 
 from models import User
 

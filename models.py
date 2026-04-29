@@ -10,7 +10,7 @@ class User(db.Model):
     name = db.Column(db.String(100), nullable=False)
     sobrenome = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    numero_telefone = db.Column(db.int(10), nullable=False)
+    numero_telefone = db.Column(db.String(10), nullable=False)
     senha = db.Column(db.String(100), nullable=False)
 
 
