@@ -15,7 +15,7 @@ def login():
 def home():
     return render_template('index.html')
 
-@app.route('/Registrar')
+@app.route('/Registrar', methods=['GET', 'POST'])
 def cadastro():
 
     #inputs
