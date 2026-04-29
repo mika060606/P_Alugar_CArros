@@ -1,6 +1,6 @@
 from flask import Flask, config, render_template
-from flask_sqlalchemy import SQLAlchemy
-from models import User,db
+from db import db
+
 import os
 
 
@@ -18,7 +18,7 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
 
 
 
-
+from models import User
 
 with app.app_context():
     db.create_all()
