@@ -1,5 +1,5 @@
 from flask import render_template,redirect,request
-import db
+from db import db
 from main import app
 from models import User
 
