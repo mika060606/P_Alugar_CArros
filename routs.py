@@ -29,7 +29,7 @@ def cadastro():
         cnf_senha = request.form['confirmar_senha']
         termos = request.form.get('termos') 
 
-        novo_usuario = User(name=name, sobrenome=sobrenome, email=email, numero_telefone=numero_telefone, senha=senha)
+        novo_usuario = User(name=name, sobrenome=sobrenome, email=email, numero_telefone=numero_telefone, senha=senha , termos=termos , cnf_senha=cnf_senha)
         db.session.add(novo_usuario)
         db.session.commit()
         return redirect('/login')
