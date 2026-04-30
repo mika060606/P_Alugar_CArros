@@ -28,6 +28,11 @@ def cadastro():
         senha = request.form['senha']
         cnf_senha = request.form['confirmar_senha']
         termos = request.form.get('termos') 
+        if termos == 'on':
+            termos = True
+        else:
+            termos = False
+        
 
         novo_usuario = User(id=1,name=name, sobrenome=sobrenome, email=email, numero_telefone=numero_telefone, senha=senha ,  cnf_senha=cnf_senha, termos=termos)
         
