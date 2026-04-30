@@ -29,9 +29,16 @@ def cadastro():
         cnf_senha = request.form['confirmar_senha']
         termos = request.form.get('termos') 
 
-        novo_usuario = User(name=name, sobrenome=sobrenome, email=email, numero_telefone=numero_telefone, senha=senha , termos=termos , cnf_senha=cnf_senha)
-        db.session.add(novo_usuario)
-        db.session.commit()
+        novo_usuario = User(id=1,name=name, sobrenome=sobrenome, email=email, numero_telefone=numero_telefone, senha=senha ,  cnf_senha=cnf_senha, termos=termos)
+        
+        try:
+            db.session.add(novo_usuario)
+            db.session.commit()
+            print("Usuario salvo com sucesso!")
+        except Exception as e:
+            db.session.rollback()
+            print("Erro ao salvar:", e)
+
         return redirect('/login')
 
 
