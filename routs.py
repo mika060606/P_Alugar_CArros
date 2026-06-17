@@ -1,7 +1,10 @@
 from flask import render_template,redirect,request
+from sqlalchemy import or_
 from db import db
 from main import app
 from models import User
+from werkzeug.security import generate_password_hash   
+
 
 @app.route('/')
 def index():
@@ -34,8 +37,21 @@ def cadastro():
             termos = False
         
 
-        novo_usuario = User(id=1,name=name, sobrenome=sobrenome, email=email, numero_telefone=numero_telefone, senha=senha ,  cnf_senha=cnf_senha, termos=termos)
+        #verificar email,numero
+
+        usuario = User.query.filter(
+        or_(User.email == email, User.numero_telefone == numero_telefone)
+        ).first()
         
+        if usuario:
+            return "Email ou número de telefone já estão em uso. Por favor, escolha outro."
+        
+        #query
+        senha_hash = generate_password_hash(senha)
+        novo_usuario = User(name=name, sobrenome=sobrenome, email=email, numero_telefone=numero_telefone, senha=senha_hash ,  cnf_senha=cnf_senha, termos=termos)
+        
+
+        # fazer a query na bd
         try:
             db.session.add(novo_usuario)
             db.session.commit()
@@ -46,6 +62,7 @@ def cadastro():
 
         return redirect('/login')
 
+    #Carregar a html
 
     return render_template('registrar.html')
          

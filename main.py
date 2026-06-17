@@ -5,17 +5,17 @@ import os
 
 
 
+# config do flask
 app = Flask(__name__, static_folder='Imagens', static_url_path='/Imagens')
 
-
-
-app.config['SQLALCHEMY_DATABASE_URI']="postgresql://aluguel_carros_user:Q4ud9pshTLuXzXIEsZtPjeFibpZ2QIam@dpg-d7nih4cvikkc73b9o8n0-a.oregon-postgres.render.com/aluguel_carros"
+app.config['SQLALCHEMY_DATABASE_URI']="postgresql://aluguel_carros_e894_user:xmELj51Wgkt7UQO7xavslicoYXEWu8SX@dpg-d8p7h7gk1i2s73ev1240-a/aluguel_carros_e894"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     "connect_args": {"sslmode": "require"}
 }
 
+#atualizar db
 db.init_app(app)
 
 from models import User
