@@ -1,3 +1,5 @@
+import re
+
 from flask import render_template,redirect,request
 from sqlalchemy import or_
 from db import db
@@ -18,6 +20,8 @@ def login():
 def home():
     return render_template('index.html')
 
+
+
 @app.route('/Registrar', methods=['GET', 'POST'])
 def cadastro():
 
@@ -31,12 +35,53 @@ def cadastro():
         senha = request.form['senha']
         cnf_senha = request.form['confirmar_senha']
         termos = request.form.get('termos') 
+
         if termos == 'on':
             termos = True
         else:
             termos = False
         
 
+        #confirmar senha
+
+        if (senha != cnf_senha):
+            return "As senhas não coincidem. Por favor, tente novamente."
+        
+        # Email
+        email_regex = r'^[^\s@]+@[^\s@]+\.[^\s@]+$'
+
+        if not re.match(email_regex, email):
+            return "Email inválido."
+
+        # Número de telefone
+        if not numero_telefone.isdigit():
+            return "O número de telefone deve conter apenas números."
+
+        if len(numero_telefone) < 9:
+            return "O número de telefone deve ter pelo menos 9 dígitos."
+
+
+
+        # Força da senha
+        if len(senha) < 8:
+            return "A senha deve ter pelo menos 8 caracteres."
+
+        if not re.search(r'[A-Z]', senha):
+            return "A senha deve conter pelo menos uma letra maiúscula."
+
+        if not re.search(r'[a-z]', senha):
+            return "A senha deve conter pelo menos uma letra minúscula."
+
+        if not re.search(r'\d', senha):
+            return "A senha deve conter pelo menos um número."
+
+        # caractere especial
+        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', senha):
+            return "A senha deve conter pelo menos um caractere especial."
+
+
+
+        
         #verificar email,numero
 
         usuario = User.query.filter(
@@ -48,7 +93,7 @@ def cadastro():
         
         #query
         senha_hash = generate_password_hash(senha)
-        novo_usuario = User(name=name, sobrenome=sobrenome, email=email, numero_telefone=numero_telefone, senha=senha_hash ,  cnf_senha=cnf_senha, termos=termos)
+        novo_usuario = User(name=name, sobrenome=sobrenome, email=email, numero_telefone=numero_telefone, senha=senha_hash , termos=termos)
         
 
         # fazer a query na bd

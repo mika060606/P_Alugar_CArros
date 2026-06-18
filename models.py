@@ -12,7 +12,7 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     numero_telefone = db.Column(db.String(15), nullable=False)
     senha = db.Column(db.Text(500), nullable=False)
-    cnf_senha = db.Column(db.String(100), nullable=False)
+
     termos = db.Column(db.Boolean, nullable=False)
 
 
