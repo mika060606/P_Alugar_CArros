@@ -11,6 +11,7 @@ app = Flask(__name__, static_folder='Imagens', static_url_path='/Imagens')
 app.config['SQLALCHEMY_DATABASE_URI']="postgresql://aluguel_carros_e894_user:xmELj51Wgkt7UQO7xavslicoYXEWu8SX@dpg-d8p7h7gk1i2s73ev1240-a/aluguel_carros_e894"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+app.secret_key = 'uma_chave_secreta_muito_segura_e_unica'
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     "connect_args": {"sslmode": "require"}
 }

@@ -1,6 +1,6 @@
 import re
 
-from flask import render_template,redirect,request
+from flask import render_template, redirect, request, flash
 from sqlalchemy import or_
 from db import db
 from main import app
@@ -23,7 +23,8 @@ def login():
         if usuario and check_password_hash(usuario.senha, senha):
             return redirect('/index')
         else:
-            return "Email ou senha incorretos."
+            flash("Email ou senha incorretos.", "error")
+            return render_template('login.html', username=email)
 
     return render_template('login.html')
 
@@ -58,39 +59,46 @@ def cadastro():
         #confirmar senha
 
         if (senha != cnf_senha):
-            return "As senhas não coincidem. Por favor, tente novamente."
+            flash("As senhas não coincidem. Por favor, tente novamente.", "error")
+            return render_template('registrar.html', nome=name, sobrenome=sobrenome, email=email, numero=numero_telefone)
         
         # Email
         email_regex = r'^[^\s@]+@[^\s@]+\.[^\s@]+$'
 
         if not re.match(email_regex, email):
-            return "Email inválido."
+            flash("Email inválido.", "error")
+            return render_template('registrar.html', nome=name, sobrenome=sobrenome, email=email, numero=numero_telefone)
 
         # Número de telefone
         if not numero_telefone.isdigit():
-            return "O número de telefone deve conter apenas números."
+            flash("O número de telefone deve conter apenas números.", "error")
+            return render_template('registrar.html', nome=name, sobrenome=sobrenome, email=email, numero=numero_telefone)
 
         if len(numero_telefone) < 9:
-            return "O número de telefone deve ter pelo menos 9 dígitos."
-
-
+            flash("O número de telefone deve ter pelo menos 9 dígitos.", "error")
+            return render_template('registrar.html', nome=name, sobrenome=sobrenome, email=email, numero=numero_telefone)
 
         # Força da senha
         if len(senha) < 8:
-            return "A senha deve ter pelo menos 8 caracteres."
+            flash("A senha deve ter pelo menos 8 caracteres.", "error")
+            return render_template('registrar.html', nome=name, sobrenome=sobrenome, email=email, numero=numero_telefone)
 
         if not re.search(r'[A-Z]', senha):
-            return "A senha deve conter pelo menos uma letra maiúscula."
+            flash("A senha deve conter pelo menos uma letra maiúscula.", "error")
+            return render_template('registrar.html', nome=name, sobrenome=sobrenome, email=email, numero=numero_telefone)
 
         if not re.search(r'[a-z]', senha):
-            return "A senha deve conter pelo menos uma letra minúscula."
+            flash("A senha deve conter pelo menos uma letra minúscula.", "error")
+            return render_template('registrar.html', nome=name, sobrenome=sobrenome, email=email, numero=numero_telefone)
 
         if not re.search(r'\d', senha):
-            return "A senha deve conter pelo menos um número."
+            flash("A senha deve conter pelo menos um número.", "error")
+            return render_template('registrar.html', nome=name, sobrenome=sobrenome, email=email, numero=numero_telefone)
 
         # caractere especial
         if not re.search(r'[!@#$%^&*(),.?":{}|<>]', senha):
-            return "A senha deve conter pelo menos um caractere especial."
+            flash("A senha deve conter pelo menos um caractere especial.", "error")
+            return render_template('registrar.html', nome=name, sobrenome=sobrenome, email=email, numero=numero_telefone)
 
 
 
@@ -102,7 +110,8 @@ def cadastro():
         ).first()
         
         if usuario:
-            return "Email ou número de telefone já estão em uso. Por favor, escolha outro."
+            flash("Email ou número de telefone já estão em uso. Por favor, escolha outro.", "error")
+            return render_template('registrar.html', nome=name, sobrenome=sobrenome, email=email, numero=numero_telefone)
         
         #query
         senha_hash = generate_password_hash(senha)
