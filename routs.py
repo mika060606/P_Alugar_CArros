@@ -5,16 +5,29 @@ from sqlalchemy import or_
 from db import db
 from main import app
 from models import User
-from werkzeug.security import generate_password_hash   
+from werkzeug.security import check_password_hash, generate_password_hash   
 
 
 @app.route('/')
 def index():
     return redirect('/login')
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        email = request.form['username']
+        senha = request.form['password']
+
+        usuario = User.query.filter(User.email == email).first()
+
+        if usuario and check_password_hash(usuario.senha, senha):
+            return redirect('/index')
+        else:
+            return "Email ou senha incorretos."
+
     return render_template('login.html')
+
+
 
 @app.route('/index')
 def home():
