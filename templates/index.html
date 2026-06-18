@@ -283,6 +283,70 @@
     </style>
 </head>
 <body>
+    <!-- Sistema de Alertas -->
+    <style>
+        .flash-alert {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            width: 90%;
+            max-width: 450px;
+            background-color: #ff4d4d;
+            color: #fff;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        .flash-alert.active { top: 25px; }
+        .flash-close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+    </style>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-alert" id="custom-alert">
+              <span>{{ message }}</span>
+              <button class="flash-close-btn" onclick="hideAlert()">&times;</button>
+          </div>
+        {% endfor %}
+        <script>
+            function hideAlert() {
+                const alert = document.getElementById('custom-alert');
+                if (alert) {
+                    alert.classList.remove('active');
+                    setTimeout(() => alert.remove(), 600);
+                }
+            }
+            window.addEventListener('load', () => {
+                const alert = document.getElementById('custom-alert');
+                if (alert) {
+                    setTimeout(() => {
+                        alert.classList.add('active');
+                    }, 500);
+                    setTimeout(hideAlert, 5500);
+                }
+            });
+        </script>
+      {% endif %}
+    {% endwith %}
+
     <!-- Header -->
     <header>
         <div class="header-container">

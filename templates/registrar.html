@@ -91,6 +91,92 @@
     </style>
 </head>
 <body>
+
+    <!-- Bloco de Alertas Flash -->
+<style>
+    /* Estilo do Retângulo de Erro */
+    .flash-alert {
+        position: fixed;
+        top: -100px; /* Começa escondido acima */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10000;
+        width: 90%;
+        max-width: 450px;
+        background-color: #ff4d4d; /* Vermelho vibrante */
+        color: #fff;
+        padding: 16px 24px;
+        border-radius: 12px; /* Cantos arredondados */
+        box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 500;
+        transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Efeito elástico */
+    }
+
+    /* Classe ativada pelo JS para descer o alerta */
+    .flash-alert.active {
+        top: 25px;
+    }
+
+    .flash-close-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.2s;
+    }
+
+    .flash-close-btn:hover {
+        background: rgba(255, 255, 255, 0.4);
+    }
+</style>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="flash-alert" id="custom-alert">
+          <span>{{ message }}</span>
+          <button class="flash-close-btn" onclick="hideAlert()">&times;</button>
+      </div>
+    {% endfor %}
+
+    <script>
+        function hideAlert() {
+            const alert = document.getElementById('custom-alert');
+            if (alert) {
+                alert.classList.remove('active');
+                // Remove do DOM após a transição
+                setTimeout(() => alert.remove(), 600);
+            }
+        }
+
+        // Timer para mostrar o erro após o reload da página
+        window.addEventListener('load', () => {
+            const alert = document.getElementById('custom-alert');
+            if (alert) {
+                // Pequeno atraso (500ms) para o utilizador ver a animação descendo
+                setTimeout(() => {
+                    alert.classList.add('active');
+                }, 500);
+
+                // Sumir automaticamente após 5 segundos
+                setTimeout(hideAlert, 5500); // 5s visível + 0.5s de delay inicial
+            }
+        });
+    </script>
+  {% endif %}
+{% endwith %}
+
     <div class="login-container">
         <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="width: 150px; display: block; margin: 0 auto 20px;">
         <h2>VaiCarros</h2>

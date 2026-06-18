@@ -122,12 +122,14 @@ def cadastro():
         try:
             db.session.add(novo_usuario)
             db.session.commit()
+            flash("Conta criada com sucesso!", "success")
             print("Usuario salvo com sucesso!")
+            return redirect('/login')
         except Exception as e:
             db.session.rollback()
+            flash("Erro ao conectar com a base de dados. Tente novamente.", "error")
             print("Erro ao salvar:", e)
-
-        return redirect('/login')
+            return render_template('registrar.html', nome=name, sobrenome=sobrenome, email=email, numero=numero_telefone)
 
     #Carregar a html
 
