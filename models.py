@@ -11,8 +11,8 @@ class User(db.Model):
     sobrenome = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     numero_telefone = db.Column(db.String(10), nullable=False)
-    senha = db.Column(db.String(255), nullable=False)
-    cnf_senha = db.Column(db.String(100), nullable=False)
+    senha = db.Column(db.String(500), nullable=False)
+    cnf_senha = db.Column(db.String(255), nullable=False)
     termos = db.Column(db.Boolean, nullable=False)
 
 
