@@ -1,6 +1,6 @@
 import re
 
-from flask import render_template, redirect, request, flash
+from flask import render_template, redirect, request, flash, session
 from sqlalchemy import or_
 from db import db
 from main import app
@@ -21,6 +21,8 @@ def login():
         usuario = User.query.filter(User.email == email).first()
 
         if usuario and check_password_hash(usuario.senha, senha):
+            session['user_authenticated'] = True
+            session['user_name'] = usuario.name
             return redirect('/index')
         else:
             flash("Email ou senha incorretos.", "error")
@@ -29,10 +31,19 @@ def login():
     return render_template('login.html')
 
 
-
 @app.route('/index')
 def home():
-    return render_template('index.html')
+    return render_template(
+        'index.html',
+        user_authenticated=session.get('user_authenticated', False),
+        user_name=session.get('user_name')
+    )
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/login')
 
 
 
