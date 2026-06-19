@@ -345,7 +345,6 @@
             z-index: 10000;
             width: 90%;
             max-width: 450px;
-            background-color: #ff4d4d;
             color: #fff;
             padding: 16px 24px;
             border-radius: 12px;
@@ -356,6 +355,23 @@
             font-family: 'Roboto', sans-serif;
             font-weight: 500;
             transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .flash-error {
+            background-color: #ff4d4d;
+        }
+
+        .flash-success {
+            background-color: #28a745;
+        }
+
+        .flash-warning {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .flash-info {
+            background-color: #17a2b8;
         }
         .flash-alert.active { top: 25px; }
         .flash-close-btn {
@@ -373,7 +389,7 @@
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
-          <div class="flash-alert" id="custom-alert">
+          <div class="flash-alert flash-{{ category }}" id="custom-alert">
               <span>{{ message }}</span>
               <button class="flash-close-btn" onclick="hideAlert()">&times;</button>
           </div>
