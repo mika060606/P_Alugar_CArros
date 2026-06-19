@@ -23,6 +23,7 @@ def login():
         if usuario and check_password_hash(usuario.senha, senha):
             session['user_authenticated'] = True
             session['user_name'] = usuario.name
+            flash("Login bem sucedido!", "success")
             return redirect('/index')
         else:
             flash("Email ou senha incorretos.", "error")
