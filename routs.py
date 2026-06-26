@@ -4,7 +4,7 @@ from flask import render_template, redirect, request, flash, session
 from sqlalchemy import or_
 from db import db
 from main import app
-from models import Favoritos, User
+from models import Carros, Favoritos, User
 from werkzeug.security import check_password_hash, generate_password_hash   
 
 
@@ -34,8 +34,9 @@ def login():
 
 @app.route('/index')
 def home():
+    carros = Carros.query.filter_by(disponivel=True).all()
     return render_template(
-        'index.html',
+        'index.html',carros=carros,
         user_authenticated=session.get('user_authenticated', False),
         user_name=session.get('user_name')
     )

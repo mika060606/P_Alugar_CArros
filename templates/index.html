@@ -475,132 +475,44 @@
     <div class="container">
         <h1 class="title">Carros Disponíveis para Aluguel</h1>
 
-        <!-- Grid de Carros -->
-        <div class="cars-grid">
-            <!-- Carro 1 -->
-            <div class="car-card">
-                <div class="car-info">
-                    <div>
-                        <div class="car-header">
-                            <div class="car-title">Toyota Corolla 2023</div>
-                            <div class="car-subtitle">Sedan Confortável</div>
-                        </div>
-                        <div class="car-description">
-                            Carro em excelente estado, com ar condicionado, vidros e espelhos elétricos. Perfeito para viagens de negócios ou passeios em família.
-                        </div>
-                        <div class="car-specs">
-                            <span>🚗 Sedan</span>
-                            <span>⛽ Gasolina</span>
-                            <span>📍 Lisboa</span>
-                            <span>⭐ 4.8/5</span>
-                        </div>
-                    </div>
-                    <div class="car-footer">
-                        <div>
-                            <div class="car-price">45€</div>
-                            <div class="car-price-period">por dia</div>
-                        </div>
-                        <button class="car-details-btn">Ver Detalhes</button>
-                    </div>
-                </div>
-                <div class="car-image">
-                    <img src="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=400&h=250&fit=crop" alt="Toyota Corolla">
-                </div>
+        {% for carro in carros %}
+        <div class="car-card">
+    <div class="car-info">
+        <div>
+            <div class="car-header">
+                <div class="car-title">{{ carro.modelo }}</div>
+                <div class="car-subtitle">Disponível para reserva</div>
             </div>
 
-            <!-- Carro 2 -->
-            <div class="car-card">
-                <div class="car-info">
-                    <div>
-                        <div class="car-header">
-                            <div class="car-title">Honda CR-V 2022</div>
-                            <div class="car-subtitle">SUV Versátil</div>
-                        </div>
-                        <div class="car-description">
-                            SUV espaçoso e confortável, com teto panorâmico e sistema de navegação integrado. Ideal para famílias ou grupos grandes.
-                        </div>
-                        <div class="car-specs">
-                            <span>🚙 SUV</span>
-                            <span>⛽ Híbrido</span>
-                            <span>📍 Porto</span>
-                            <span>⭐ 4.9/5</span>
-                        </div>
-                    </div>
-                    <div class="car-footer">
-                        <div>
-                            <div class="car-price">65€</div>
-                            <div class="car-price-period">por dia</div>
-                        </div>
-                        <button class="car-details-btn">Ver Detalhes</button>
-                    </div>
-                </div>
-                <div class="car-image">
-                    <img src="https://images.unsplash.com/photo-1606611013016-969c19d14444?w=400&h=250&fit=crop" alt="Honda CR-V">
-                </div>
+            <div class="car-description">
+                {{ carro.descricao }}
             </div>
 
-            <!-- Carro 3 -->
-            <div class="car-card">
-                <div class="car-info">
-                    <div>
-                        <div class="car-header">
-                            <div class="car-title">Mercedes-Benz A-Class 2023</div>
-                            <div class="car-subtitle">Sedan Premium</div>
-                        </div>
-                        <div class="car-description">
-                            Veículo de luxo com acabamento premium, interior acolhedor e tecnologia de ponta. Uma escolha perfeita para ocasiões especiais.
-                        </div>
-                        <div class="car-specs">
-                            <span>🚗 Sedan</span>
-                            <span>⛽ Gasolina</span>
-                            <span>📍 Covilhã</span>
-                            <span>⭐ 5.0/5</span>
-                        </div>
-                    </div>
-                    <div class="car-footer">
-                        <div>
-                            <div class="car-price">85€</div>
-                            <div class="car-price-period">por dia</div>
-                        </div>
-                        <button class="car-details-btn">Ver Detalhes</button>
-                    </div>
-                </div>
-                <div class="car-image">
-                    <img src="https://images.unsplash.com/photo-1617654112368-307921291f50?w=400&h=250&fit=crop" alt="Mercedes-Benz">
-                </div>
-            </div>
-
-            <!-- Carro 4 -->
-            <div class="car-card">
-                <div class="car-info">
-                    <div>
-                        <div class="car-header">
-                            <div class="car-title">Volkswagen T-Roc 2024</div>
-                            <div class="car-subtitle">SUV Compacto</div>
-                        </div>
-                        <div class="car-description">
-                            SUV compacto e ágil, perfeito para a cidade. Economização de combustível e facilidade de estacionamento sem comprometer o conforto.
-                        </div>
-                        <div class="car-specs">
-                            <span>🚙 SUV</span>
-                            <span>⛽ Diesel</span>
-                            <span>📍 Aveiro</span>
-                            <span>⭐ 4.7/5</span>
-                        </div>
-                    </div>
-                    <div class="car-footer">
-                        <div>
-                            <div class="car-price">55€</div>
-                            <div class="car-price-period">por dia</div>
-                        </div>
-                        <button class="car-details-btn">Ver Detalhes</button>
-                    </div>
-                </div>
-                <div class="car-image">
-                    <img src="https://images.unsplash.com/photo-1605559424843-9e4c3dec147d?w=400&h=250&fit=crop" alt="Volkswagen T-Roc">
-                </div>
+            <div class="car-specs">
+                <span>📍 {{ carro.localizacao }}</span>
+                <span>⭐ {{ carro.classificacao }}</span>
             </div>
         </div>
+
+        <div class="car-footer">
+            <div>
+                <div class="car-price">{{ carro.valor }}€</div>
+                <div class="car-price-period">por dia</div>
+            </div>
+
+            <button class="car-details-btn">
+                Ver Detalhes
+            </button>
+        </div>
     </div>
+
+    <div class="car-image">
+        <img src="{{ carro.imagem }}" alt="{{ carro.modelo }}">
+    </div>
+        </div>
+        {% endfor %}
+        
+        </div>
+    
 </body>
 </html>
