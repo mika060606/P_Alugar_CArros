@@ -4,7 +4,7 @@ from flask import render_template, redirect, request, flash, session
 from sqlalchemy import or_
 from db import db
 from main import app
-from models import User
+from models import Favoritos, User
 from werkzeug.security import check_password_hash, generate_password_hash   
 
 
@@ -147,3 +147,30 @@ def cadastro():
 
     return render_template('registrar.html')
          
+
+
+#pega o id do carro
+@app.route('/favorito/<int:carro_id>', methods=['POST'])
+def favorito(carro_id):
+
+    #ve na session que é iniciada e ve se ta logado
+    if not session.get('user_authenticated'):
+        flash("Você precisa estar logado para favoritar um carro.", "error")
+        return redirect('/login')
+
+    user_id = session.get('user_id')  
+    
+    #cria a instancia para ver se ja existe o favorito
+    favorito_existente = Favoritos.query.filter_by(user_id=user_id, carro_id=carro_id).first()
+
+    if favorito_existente:
+        db.session.delete(favorito_existente)
+        db.session.commit()
+        flash("Carro removido dos favoritos.", "success")
+    else:
+        novo_favorito = Favoritos(user_id=user_id, carro_id=carro_id)
+        db.session.add(novo_favorito)
+        db.session.commit()
+        flash("Carro adicionado aos favoritos.", "success")
+
+    return redirect(request.referrer or '/index')
