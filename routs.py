@@ -34,7 +34,7 @@ def login():
 
 @app.route('/index')
 def home():
-    carros = Carros.query.filter_by(disponivel=True).all()
+    carros = Carros.query.filter_by(ativo=True).all()
     return render_template(
         'index.html',carros=carros,
         user_authenticated=session.get('user_authenticated', False),
