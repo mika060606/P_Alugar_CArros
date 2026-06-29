@@ -28,6 +28,7 @@ class Carros(db.Model):
     modelo = db.Column(db.String(100), nullable=False)
     descricao = db.Column(db.Text(500), nullable=False)
     valor = db.Column(db.Float, nullable=False)
+    ano = db.Column(db.Integer, nullable=True)
     localizacao = db.Column(db.String(100), nullable=False)
     classificacao = db.Column(db.String(50), nullable=False)
     ativo = db.Column(db.Boolean, nullable=False, default=True)

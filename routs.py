@@ -39,8 +39,16 @@ def login():
 def home():
     termo_pesquisa = request.args.get('q', '').strip()
     ordenar = request.args.get('ordenar', '')
+    filtros = {
+        'min_preco': request.args.get('min_preco', '').strip(),
+        'max_preco': request.args.get('max_preco', '').strip(),
+        'ano': request.args.get('ano', '').strip(),
+        'modelo': request.args.get('modelo', '').strip(),
+        'localidade': request.args.get('localidade', '').strip(),
+        'classificacao': request.args.get('classificacao', '').strip(),
+    }
     carros = Carros.query.filter_by(ativo=True).all()
-    carros = filtrar_carros(carros, termo_pesquisa, ordenar)
+    carros = filtrar_carros(carros, termo_pesquisa, ordenar, filtros)
 
     favoritos_ids = set()
     if session.get('user_authenticated'):
@@ -56,6 +64,12 @@ def home():
         user_name=session.get('user_name'),
         search_query=termo_pesquisa,
         ordenar=ordenar,
+        min_preco=filtros['min_preco'],
+        max_preco=filtros['max_preco'],
+        ano=filtros['ano'],
+        modelo=filtros['modelo'],
+        localidade=filtros['localidade'],
+        classificacao=filtros['classificacao'],
         favoritos_ids=favoritos_ids,
     )
 
@@ -68,6 +82,14 @@ def favoritos():
 
     termo_pesquisa = request.args.get('q', '').strip()
     ordenar = request.args.get('ordenar', '')
+    filtros = {
+        'min_preco': request.args.get('min_preco', '').strip(),
+        'max_preco': request.args.get('max_preco', '').strip(),
+        'ano': request.args.get('ano', '').strip(),
+        'modelo': request.args.get('modelo', '').strip(),
+        'localidade': request.args.get('localidade', '').strip(),
+        'classificacao': request.args.get('classificacao', '').strip(),
+    }
     favoritos_do_usuario = Favoritos.query.filter_by(user_id=session.get('user_id')).all()
 
     carros_favoritos = []
@@ -76,7 +98,7 @@ def favoritos():
         if carro and carro.ativo:
             carros_favoritos.append(carro)
 
-    carros_favoritos = filtrar_carros(carros_favoritos, termo_pesquisa, ordenar)
+    carros_favoritos = filtrar_carros(carros_favoritos, termo_pesquisa, ordenar, filtros)
 
     return render_template(
         'favoritos.html',
@@ -85,6 +107,12 @@ def favoritos():
         user_name=session.get('user_name'),
         search_query=termo_pesquisa,
         ordenar=ordenar,
+        min_preco=filtros['min_preco'],
+        max_preco=filtros['max_preco'],
+        ano=filtros['ano'],
+        modelo=filtros['modelo'],
+        localidade=filtros['localidade'],
+        classificacao=filtros['classificacao'],
         favoritos_ids={carro.id for carro in carros_favoritos},
     )
 
