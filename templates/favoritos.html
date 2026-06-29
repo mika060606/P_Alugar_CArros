@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Favoritos - VaiCarros</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Roboto', sans-serif; background-color: #f5f5f5; color: #333; }
@@ -23,14 +24,21 @@
         .account-dropdown a { display: block; padding: 12px 16px; color: #333; text-decoration: none; }
         .account-dropdown a:hover { background-color: #f3f7ff; }
         .account-dropdown.show { display: block; }
-        .search-bar { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
-        .search-container { display: flex; flex-direction: column; gap: 12px; background-color: #fff; padding: 18px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
-        .search-top-row { display: flex; gap: 10px; align-items: center; }
-        .search-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+        .search-bar { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: flex; justify-content: flex-end; }
+        .filter-toggle { background: linear-gradient(135deg, #3498db, #2b7cb6); color: white; border: none; padding: 10px 18px; border-radius: 999px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(52, 152, 219, 0.25); }
+        .filter-panel { position: fixed; top: 0; right: -420px; width: min(400px, 90vw); height: 100vh; background: #fff; box-shadow: -8px 0 30px rgba(0,0,0,0.16); padding: 24px; z-index: 2000; transition: right 0.3s ease; overflow-y: auto; }
+        .filter-panel.open { right: 0; }
+        .filter-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+        .filter-panel-title { font-size: 1.2em; font-weight: 700; color: #333; }
+        .filter-close-btn { background: #f2f6fb; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 1.1em; }
+        .filter-panel form { display: flex; flex-direction: column; gap: 12px; }
+        .filter-panel .search-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         .search-group { display: flex; flex-direction: column; gap: 6px; }
         .search-group label { font-size: 0.85em; font-weight: 600; color: #555; }
         .search-container input, .search-container select { border: 1px solid #d9e2ec; padding: 10px 12px; border-radius: 8px; font-size: 1em; width: 100%; }
-        .search-container button { background: linear-gradient(135deg, #3498db, #2b7cb6); color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .filter-panel .search-actions { display: flex; justify-content: space-between; gap: 10px; margin-top: 8px; }
+        .filter-panel button { background: linear-gradient(135deg, #3498db, #2b7cb6); color: white; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .filter-panel .clear-btn { background: #f2f6fb; color: #555; border: 1px solid #dce4ee; }
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         .title { font-size: 2em; margin-bottom: 30px; color: #333; }
         .cars-grid { display: grid; gap: 20px; }
@@ -81,17 +89,28 @@
     </header>
 
     <div class="search-bar">
-        <form class="search-container" action="/favoritos" method="get">
-            <div class="search-top-row">
-                <input type="text" name="q" value="{{ search_query or '' }}" placeholder="Procure por marca, modelo ou localização...">
-                <select name="ordenar">
-                    <option value="">Ordenar por</option>
-                    <option value="preco" {% if ordenar == 'preco' %}selected{% endif %}>Preço</option>
-                    <option value="nome" {% if ordenar == 'nome' %}selected{% endif %}>Nome</option>
-                </select>
-                <button type="submit">Aplicar filtros</button>
-            </div>
+        <button class="filter-toggle" type="button" onclick="toggleFilterPanel()">Filtrar</button>
+    </div>
+
+    <div class="filter-panel" id="filterPanel">
+        <div class="filter-panel-header">
+            <div class="filter-panel-title">Filtros avançados</div>
+            <button class="filter-close-btn" type="button" onclick="toggleFilterPanel()" aria-label="Fechar filtros">✕</button>
+        </div>
+        <form action="/favoritos" method="get">
             <div class="search-grid">
+                <div class="search-group">
+                    <label for="q">Busca rápida</label>
+                    <input type="text" id="q" name="q" value="{{ search_query or '' }}" placeholder="Procure por marca, modelo ou localização...">
+                </div>
+                <div class="search-group">
+                    <label for="ordenar">Ordenar por</label>
+                    <select id="ordenar" name="ordenar">
+                        <option value="">Ordenar por</option>
+                        <option value="preco" {% if ordenar == 'preco' %}selected{% endif %}>Preço</option>
+                        <option value="nome" {% if ordenar == 'nome' %}selected{% endif %}>Nome</option>
+                    </select>
+                </div>
                 <div class="search-group">
                     <label for="min_preco">Preço mínimo</label>
                     <input type="number" id="min_preco" name="min_preco" min="0" step="0.01" value="{{ min_preco or '' }}" placeholder="Ex: 40">
@@ -124,6 +143,10 @@
                     </select>
                 </div>
             </div>
+            <div class="search-actions">
+                <button class="clear-btn" type="button" onclick="clearFilters()">Limpar</button>
+                <button type="submit">Aplicar filtros</button>
+            </div>
         </form>
     </div>
 
@@ -133,12 +156,35 @@
             if (!dropdown) return;
             dropdown.classList.toggle('show');
         }
+
+        function toggleFilterPanel() {
+            const panel = document.getElementById('filterPanel');
+            if (!panel) return;
+            panel.classList.toggle('open');
+        }
+
+        function clearFilters() {
+            const form = document.querySelector('.filter-panel form');
+            if (!form) return;
+            form.reset();
+            const search = form.querySelector('#q');
+            if (search) search.value = '';
+        }
+
         window.addEventListener('click', (event) => {
             const dropdown = document.getElementById('accountDropdown');
             const button = event.target.closest('.account-button');
             if (!dropdown) return;
             if (!button && !event.target.closest('.account-menu')) {
                 dropdown.classList.remove('show');
+            }
+
+            const panel = document.getElementById('filterPanel');
+            const toggleButton = event.target.closest('.filter-toggle');
+            const panelContent = event.target.closest('.filter-panel');
+            if (panel && !panel.classList.contains('open')) return;
+            if (panel && !toggleButton && !panelContent && !event.target.closest('.filter-close-btn')) {
+                panel.classList.remove('open');
             }
         });
     </script>
