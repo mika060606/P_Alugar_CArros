@@ -172,6 +172,47 @@
             background-color: #2980b9;
         }
 
+        .search-container select {
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 1em;
+            background-color: #fff;
+            color: #333;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .favorite-btn {
+            background-color: #fff3cd;
+            color: #8a6d3b;
+            border: 1px solid #ffeeba;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .favorite-btn.active {
+            background-color: #f39c12;
+            color: white;
+            border-color: #f39c12;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            color: #666;
+        }
+
         /* Container Principal */
         .container {
             max-width: 1200px;
@@ -424,7 +465,7 @@
             </div>
             <nav>
                 <a href="/index">Início</a>
-                <a href="#">Favoritos</a>
+                <a href="/favoritos">Favoritos</a>
                 <a href="#">Reservados</a>
                 <a href="#">Contactos</a>
                 {% if user_authenticated %}
@@ -434,7 +475,7 @@
                         </button>
                         <div class="account-dropdown" id="accountDropdown">
                             <a href="#">Perfil</a>
-                            <a href="#">Favoritos</a>
+                            <a href="/favoritos">Favoritos</a>
                             <a href="#">Reservados</a>
                             <a href="/logout">Sair</a>
                         </div>
@@ -448,10 +489,15 @@
 
     <!-- Barra de Pesquisa -->
     <div class="search-bar">
-        <div class="search-container">
-            <input type="text" placeholder="Procure por marca, modelo...">
-            <button>Pesquisar</button>
-        </div>
+        <form class="search-container" action="/index" method="get">
+            <input type="text" name="q" value="{{ search_query or '' }}" placeholder="Procure por marca, modelo...">
+            <select name="ordenar">
+                <option value="">Filtrar</option>
+                <option value="preco" {% if ordenar == 'preco' %}selected{% endif %}>Preço</option>
+                <option value="nome" {% if ordenar == 'nome' %}selected{% endif %}>Nome</option>
+            </select>
+            <button type="submit">Pesquisar</button>
+        </form>
     </div>
 
     <script>
@@ -475,42 +521,52 @@
     <div class="container">
         <h1 class="title">Carros Disponíveis para Aluguel</h1>
 
-        {% for carro in carros %}
-        <div class="car-card">
-    <div class="car-info">
-        <div>
-            <div class="car-header">
-                <div class="car-title">{{ carro.modelo }}</div>
-                <div class="car-subtitle">Disponível para reserva</div>
+
+        {% if carros %}
+            {% for carro in carros %}
+            <div class="car-card">
+                <div class="car-info">
+                    <div>
+                        <div class="car-header">
+                            <div class="car-title">{{ carro.modelo }}</div>
+                            <div class="car-subtitle">Disponível para reserva</div>
+                        </div>
+
+                        <div class="car-description">
+                            {{ carro.descricao }}
+                        </div>
+
+                        <div class="car-specs">
+                            <span>📍 {{ carro.localizacao }}</span>
+                            <span>⭐ {{ carro.classificacao }}</span>
+                        </div>
+                    </div>
+
+                    <div class="car-footer">
+                        <div>
+                            <div class="car-price">{{ carro.valor }}€</div>
+                            <div class="car-price-period">por dia</div>
+                        </div>
+
+                        <div class="card-actions">
+                            <form action="{{ url_for('favorito', carro_id=carro.id) }}" method="post">
+                                <button type="submit" class="favorite-btn {% if carro.id in favoritos_ids %}active{% endif %}">
+                                    {% if carro.id in favoritos_ids %}★ Favorito{% else %}☆ Favoritar{% endif %}
+                                </button>
+                            </form>
+                            <button class="car-details-btn">Ver Detalhes</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="car-image">
+                    <img src="{{ carro.imagem }}" alt="{{ carro.modelo }}">
+                </div>
             </div>
-
-            <div class="car-description">
-                {{ carro.descricao }}
-            </div>
-
-            <div class="car-specs">
-                <span>📍 {{ carro.localizacao }}</span>
-                <span>⭐ {{ carro.classificacao }}</span>
-            </div>
-        </div>
-
-        <div class="car-footer">
-            <div>
-                <div class="car-price">{{ carro.valor }}€</div>
-                <div class="car-price-period">por dia</div>
-            </div>
-
-            <button class="car-details-btn">
-                Ver Detalhes
-            </button>
-        </div>
-    </div>
-
-    <div class="car-image">
-        <img src="{{ carro.imagem }}" alt="{{ carro.modelo }}">
-    </div>
-        </div>
-        {% endfor %}
+            {% endfor %}
+        {% else %}
+            <p class="empty-state">Nenhum carro encontrado para esta pesquisa.</p>
+        {% endif %}
         
         </div>
     

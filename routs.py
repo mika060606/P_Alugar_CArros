@@ -1,11 +1,13 @@
 import re
 
-from flask import render_template, redirect, request, flash, session
+from flask import flash, redirect, render_template, request, session
 from sqlalchemy import or_
+
+from carros_utils import filtrar_carros
 from db import db
 from main import app
 from models import Carros, Favoritos, User
-from werkzeug.security import check_password_hash, generate_password_hash   
+from werkzeug.security import check_password_hash, generate_password_hash
 
 
 @app.route('/')
@@ -22,6 +24,7 @@ def login():
 
         if usuario and check_password_hash(usuario.senha, senha):
             session['user_authenticated'] = True
+            session['user_id'] = usuario.id
             session['user_name'] = usuario.name
             flash("Login bem sucedido!", "success")
             return redirect('/index')
@@ -34,11 +37,55 @@ def login():
 
 @app.route('/index')
 def home():
+    termo_pesquisa = request.args.get('q', '').strip()
+    ordenar = request.args.get('ordenar', '')
     carros = Carros.query.filter_by(ativo=True).all()
+    carros = filtrar_carros(carros, termo_pesquisa, ordenar)
+
+    favoritos_ids = set()
+    if session.get('user_authenticated'):
+        favoritos_ids = {
+            favorito.carro_id
+            for favorito in Favoritos.query.filter_by(user_id=session.get('user_id')).all()
+        }
+
     return render_template(
-        'index.html',carros=carros,
+        'index.html',
+        carros=carros,
         user_authenticated=session.get('user_authenticated', False),
-        user_name=session.get('user_name')
+        user_name=session.get('user_name'),
+        search_query=termo_pesquisa,
+        ordenar=ordenar,
+        favoritos_ids=favoritos_ids,
+    )
+
+
+@app.route('/favoritos')
+def favoritos():
+    if not session.get('user_authenticated'):
+        flash("Você precisa estar logado para ver os favoritos.", "error")
+        return redirect('/login')
+
+    termo_pesquisa = request.args.get('q', '').strip()
+    ordenar = request.args.get('ordenar', '')
+    favoritos_do_usuario = Favoritos.query.filter_by(user_id=session.get('user_id')).all()
+
+    carros_favoritos = []
+    for favorito in favoritos_do_usuario:
+        carro = Carros.query.get(favorito.carro_id)
+        if carro and carro.ativo:
+            carros_favoritos.append(carro)
+
+    carros_favoritos = filtrar_carros(carros_favoritos, termo_pesquisa, ordenar)
+
+    return render_template(
+        'favoritos.html',
+        carros=carros_favoritos,
+        user_authenticated=True,
+        user_name=session.get('user_name'),
+        search_query=termo_pesquisa,
+        ordenar=ordenar,
+        favoritos_ids={carro.id for carro in carros_favoritos},
     )
 
 
