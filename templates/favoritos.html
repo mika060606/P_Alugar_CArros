@@ -35,8 +35,10 @@
         .filter-panel form { display: flex; flex-direction: column; gap: 12px; }
         .filter-panel .search-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         .search-group { display: flex; flex-direction: column; gap: 6px; }
-        .search-group label { font-size: 0.85em; font-weight: 600; color: #555; }
-        .search-container input, .search-container select { border: 1px solid #d9e2ec; padding: 10px 12px; border-radius: 12px; font-size: 1em; width: 100%; box-shadow: inset 0 1px 2px rgba(0,0,0,0.03); }
+        .search-group label { font-size: 15px; font-weight: 700; color: #2563eb; margin-bottom: 8px; }
+        .search-group input, .search-group select { width: 100%; padding: 14px 18px; border: 2px solid #bcd8ff; border-radius: 14px; background: linear-gradient(180deg, #ffffff, #f8fbff); font-size: 16px; font-weight: 500; color: #1f2937; outline: none; transition: all 0.25s ease; box-sizing: border-box; appearance: none; -webkit-appearance: none; -moz-appearance: none; }
+        .search-group input:focus, .search-group select:focus { border-color: #3498db; box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.18); background: white; }
+        .search-group select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='none' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' stroke='%233498db' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 45px; }
         .filter-panel .search-actions { display: flex; justify-content: space-between; gap: 10px; margin-top: 8px; }
         .filter-panel button { background: linear-gradient(135deg, #3498db, #2b7cb6); color: white; border: none; padding: 10px 16px; border-radius: 999px; cursor: pointer; font-weight: 700; box-shadow: 0 4px 10px rgba(52, 152, 219, 0.18); }
         .filter-panel .clear-btn { background: #f2f6fb; color: #555; border: 1px solid #dce4ee; box-shadow: none; }
